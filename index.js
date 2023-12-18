@@ -12,7 +12,7 @@ const doctorRouter = require("./src/modules/doctors/doctor.routes");
 const departmentRouter = require("./src/modules/departments/department.routes");
 const appoinmentRouter = require("./src/modules/appointments/appointment.routes");
 const prescriptionRouter = require("./src/modules/prescriptions/prescription.routes");
-app.get('/', (req,res) => {res.send("Hello in our Hospital")})
+app.get('/', (req,res) => {res.send("Hello in our MEDEASY Hospital")})
 
 connectionDB();
 app.use(cors());  
