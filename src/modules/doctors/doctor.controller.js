@@ -71,11 +71,6 @@ const addDoctor = async (req, res) => {
     try {
         const {name, email, password, gender, salary, speciality, departmentId} = req.body;
 
-        // Validate required fields
-        if (!name || !email || !password || !gender || !salary || !speciality || !departmentId) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
-
         // Check if email already exists
         const existingDoctor = await doctorModel.findOne({ email });
         if (existingDoctor) {

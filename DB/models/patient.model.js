@@ -29,6 +29,10 @@ const PatientSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+  }, 
+  isConfirmed:{
+    type: Boolean,
+    default: false
   }
 });
 

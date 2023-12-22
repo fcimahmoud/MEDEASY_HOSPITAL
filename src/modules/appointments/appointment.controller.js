@@ -7,11 +7,6 @@ const takeAppointment = async (req, res) => {
     try {
         const { date, patientId, doctorId } = req.body;
 
-        // Validate required fields
-        if (!date || !doctorId || !patientId) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
-
         // Check doctor and patient existence
         const doctor = await doctorModel.findById(doctorId);
         if (!doctor) {

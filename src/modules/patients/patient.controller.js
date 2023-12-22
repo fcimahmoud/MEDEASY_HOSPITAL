@@ -3,22 +3,30 @@ const jwt = require("jsonwebtoken");
 const appointmentModel = require("../../../DB/models/appointment.model");
 const patientModel = require("../../../DB/models/patient.model");
 const prescriptionModel = require("../../../DB/models/prescription.model");
-
+const { sendEmail } = require("../../services/sendEmail")
 
 
 const register = async (req, res) => {
     try {
         const {name, email, password, age, gender, phone, address} = req.body;
 
-        // Validate required fields
-        if  (!name || !email || !password || !gender || !age || !phone || !address) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
-
         // Check for existing email (unique constraint)
         const existingPatient = await patientModel.findOne({ email });
         if (existingPatient) {
             return res.status(409).json({ message: 'Email already exists' });
+        }
+
+        // Confirmation Email
+        const token = jwt.sign({email}, process.env.CONFIRM_EMAIL_TOKEN , {expiresIn: '1h'})
+        const confirmLink = `http://localhost:5000/patient/confirmEmail/${token}`
+        const message = `<a href=${confirmLink}> Click to confirm your email </a>`
+        const emailSent = await sendEmail({
+            to: email,
+            subject: "Confirmation Email",
+            message: message,
+        })
+        if (!emailSent) {
+            return res.status(500).json({message: "Please, try again later"});
         }
 
         // Create and save new patient
@@ -29,6 +37,17 @@ const register = async (req, res) => {
         res.status(201).json({ patient: newPatient});
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+
+const confirmEmail = async (req, res) => {
+    try {
+        const {token} = req.params;
+        const decodedData = jwt.verify(token, process.env.CONFIRM_EMAIL_TOKEN);
+        const patient = await patientModel.findOneAndUpdate({email: decodedData.email}, {isConfirmed: true}, {new: true })
+        res.status(200).json({message: "Email is confirmed successfully"});
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
 };
 
@@ -46,6 +65,11 @@ const login = async (req, res) => {
         const validPassword = bcrypt.compareSync(password, patient.password);
         if(!validPassword) {
             return res.status(404).json({message: "Invalid email or password"});
+        }
+
+        // isConfirmed account
+        if (!patient.isConfirmed) {
+            return res.status(404).json({message: "Your Email Not Confirmed"});
         }
 
         const token = jwt.sign({email , _id: patient._id}, process.env.SIGN_IN_TOKEN_SECRET)
@@ -172,6 +196,7 @@ const getPrescriptionsPatient = async (req, res) => {
 module.exports = {
     login,
     register,
+    confirmEmail,
     displayProfile,
     updateProfile,
     deleteAccount,

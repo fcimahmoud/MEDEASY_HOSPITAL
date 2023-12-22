@@ -10,6 +10,11 @@ const DepartmentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  // managerId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Doctor',
+  //   required: true,
+  // }
 });
 
 const departmentModel = mongoose.model('Department', DepartmentSchema);

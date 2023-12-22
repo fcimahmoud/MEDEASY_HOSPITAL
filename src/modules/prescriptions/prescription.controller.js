@@ -9,15 +9,15 @@ const fillPrescription = async (req, res) => {
         const { date, medicine, doctorId, patientId } = req.body;
         const { _id } = req.authUser;
 
-        // Validate required fields
-        if (!date || !medicine || !doctorId || !patientId) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
+        // // Validate required fields
+        // if (!date || !medicine || !doctorId || !patientId) {
+        //     return res.status(400).json({ message: 'Missing required fields' });
+        // }
 
-        // Validate medicine array format
-        if (!Array.isArray(medicine) || !medicine.every(med => med.name && med.dosage && med.frequency)) {
-            return res.status(400).json({ message: 'Invalid medicine array format' });
-        }
+        // // Validate medicine array format
+        // if (!Array.isArray(medicine) || !medicine.every(med => med.name && med.dosage && med.frequency)) {
+        //     return res.status(400).json({ message: 'Invalid medicine array format' });
+        // }
 
         // Check doctor and patient existence
         const doctor = await doctorModel.findById(doctorId);
@@ -55,10 +55,10 @@ const updatePrescription = async (req, res) => {
             return res.status(404).json({ message: 'Prescription not found' });
         }
 
-        // Validate updated medicine array format if provided
-        if (medicine && !Array.isArray(medicine) || !medicine.every(med => med.name && med.dosage && med.frequency)) {
-        return res.status(400).json({ message: 'Invalid medicine array format' });
-        }
+        // // Validate updated medicine array format if provided
+        // if (medicine && !Array.isArray(medicine) || !medicine.every(med => med.name && med.dosage && med.frequency)) {
+        // return res.status(400).json({ message: 'Invalid medicine array format' });
+        // }
 
         // Check updated doctor and patient existence if provided
         if (doctorId) {

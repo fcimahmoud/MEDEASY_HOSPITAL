@@ -4,10 +4,6 @@ const doctorModel = require('../../../DB/models/doctor.model');
 const addDepartment = async (req, res) => {
     try {
         const {name, numOfDoctors} = req.body;
-        // Validate required fields
-        if (!name || !numOfDoctors) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
 
         // Check Department Name Exist
         const existingDepartment = await departmentModel.findOne({ name });

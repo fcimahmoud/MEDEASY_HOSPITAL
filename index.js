@@ -5,7 +5,7 @@ config();
 
 
 const app = express();
-const port = process.env.PORT || 5000
+const port =  process.env.PORT || 5000
 const { connectionDB } = require("./DB/connection");
 const patientRouter = require("./src/modules/patients/patient.routes");
 const doctorRouter = require("./src/modules/doctors/doctor.routes");
@@ -22,7 +22,9 @@ app.use('/doctor', doctorRouter)
 app.use('/department', departmentRouter)
 app.use('/appoinment', appoinmentRouter)
 app.use('/prescription', prescriptionRouter)
-
+app.use('*', (req,res) => {
+  res.status(404).json({message: "404 NOT Found URL"});
+})
 
 app.listen(port, () => {
   console.log('Server is running ..!');

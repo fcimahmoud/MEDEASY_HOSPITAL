@@ -2,12 +2,15 @@ const Router = require('express');
 const router = Router();
 const prescription = require('./prescription.controller')
 const { isAuthenticated } = require('../../middlewares/Authentication');
+const { isValidated } = require('../../middlewares/valdation');
+const { fillPrescriptionSchema, updatePrescriptionSchema, 
+        deletePrescriptionSchema, getPrescriptionByIdSchema } = require('./prescription.validationSchemas');
 
-router.post('/', isAuthenticated(), prescription.fillPrescription);
+router.post('/', isValidated(fillPrescriptionSchema), isAuthenticated(), prescription.fillPrescription);
 
-router.put('/:id', prescription.updatePrescription);
-router.delete('/:id', prescription.deletePrescription);
+router.put('/:id', isValidated(updatePrescriptionSchema), prescription.updatePrescription);
+router.delete('/:id', isValidated(deletePrescriptionSchema), prescription.deletePrescription);
 router.get('/', prescription.getAllPrescriptions);
-router.get('/:id', prescription.getPrescriptionById);
+router.get('/:id', isValidated(getPrescriptionByIdSchema), prescription.getPrescriptionById);
 
 module.exports = router;
