@@ -18,7 +18,7 @@ const register = async (req, res) => {
 
         // Confirmation Email
         const token = jwt.sign({email}, process.env.CONFIRM_EMAIL_TOKEN , {expiresIn: '1h'})
-        const confirmLink = `http://localhost:5000/patient/confirmEmail/${token}`
+        const confirmLink = `https://medeasy-1eic.onrender.com/patient/confirmEmail/${token}`
         const message = `<a href=${confirmLink}> Click to confirm your email </a>`
         const emailSent = await sendEmail({
             to: email,
